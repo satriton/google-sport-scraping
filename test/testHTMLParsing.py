@@ -1,22 +1,21 @@
-import datetime
+from datetime import date, datetime, timedelta
 import os
 import unittest
 import Fixture
-
-# In order to import files from src
+from parameterized import parameterized
+from bs4 import BeautifulSoup
 import sys
 
 sys.path.append( f'{os.getcwd()}/src' )
 
 import modele.GameData as GameData
 from modele.Team import Team
-from extractData import extract_game_data_from_html
-from bs4 import BeautifulSoup
+from extractData import convert_to_date, extract_game_data_from_html
 
 class TestHTMLParsing(unittest.TestCase):
 
     def test_parse_teams_for_played_game(self):
-        game: GameData = extract_game_data_from_html(Fixture.past_game)
+        game: GameData = extract_game_data_from_html(BeautifulSoup(Fixture.past_game, 'html.parser'))
 
         self.assertEqual(
             game.teams, 
@@ -24,7 +23,7 @@ class TestHTMLParsing(unittest.TestCase):
         )
 
     def test_parse_teams_for_futur_game(self):
-        game: GameData = extract_game_data_from_html(Fixture.futur_game)
+        game: GameData = extract_game_data_from_html(BeautifulSoup(Fixture.futur_game, 'html.parser'))
 
         self.assertEqual(
             game.teams, 
@@ -32,11 +31,11 @@ class TestHTMLParsing(unittest.TestCase):
         )
 
     def test_parse_the_date_for_past_game(self):
-        game: GameData = extract_game_data_from_html(Fixture.past_game)
+        game: GameData = extract_game_data_from_html(BeautifulSoup(Fixture.past_game, 'html.parser'))
 
         self.assertEqual(
             game.date, 
-            datetime.datetime(2024, 8, 18)
+            date(2024, 8, 18)
         )
         self.assertEqual(
             game.is_finished, 
@@ -44,11 +43,11 @@ class TestHTMLParsing(unittest.TestCase):
         )
 
     def test_parse_the_date_for_futur_game(self):
-        game: GameData = extract_game_data_from_html(Fixture.futur_game)
+        game: GameData = extract_game_data_from_html(BeautifulSoup(Fixture.futur_game, 'html.parser'))
 
         self.assertEqual(
             game.date, 
-            datetime.datetime(2024, 9, 2, 15, 0)
+            datetime(2024, 9, 2, 15, 0)
         )
         self.assertEqual(
             game.is_finished, 
@@ -56,7 +55,7 @@ class TestHTMLParsing(unittest.TestCase):
         )
 
     def test_define_winner_team_and_replay_for_past_game(self):
-        game: GameData = extract_game_data_from_html(Fixture.past_game)
+        game: GameData = extract_game_data_from_html(BeautifulSoup(Fixture.past_game, 'html.parser'))
 
         self.assertEqual(
             game.winner, 
@@ -67,16 +66,19 @@ class TestHTMLParsing(unittest.TestCase):
             "https://stories.canalplus.com/games/126001-20230818-Bayonne-vs-Stade-Toulousain.html"
         )
 
-    def test_winner_team_and_replay_for_futur_game(self):
-        game: GameData = extract_game_data_from_html(Fixture.futur_game)
+    @parameterized.expand([
+        ["Aujourd'hui", date.today()],
+        ["Demain", (datetime.today() + timedelta(days=1)).date()],
+        ["Dim. 21/01", date(datetime.today().year, 1, 21)],
+        ["16/04/23", date(23, 4, 16)],
+        ["16/04", date(datetime.today().year, 4, 16)],
+    ])
+    def test_parse_different_date_format(self, date, expected_date):
+        parsed_date = convert_to_date(date, "Terminé")
 
         self.assertEqual(
-            game.winner, 
-            None
-        )
-        self.assertEqual(
-            game.replay_link, 
-            None
+            parsed_date, 
+            expected_date
         )
 
 

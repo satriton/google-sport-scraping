@@ -1,43 +1,33 @@
-import os
-
+from typing import List
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 
 from extractData import extract_game_data_from_html
+from modele.GameData import GameData
 
-# Configure headless options
-options = Options()
-options.add_argument("--headless")
+def get_next_games(team_name: str, sport: str = "rugby") -> List[GameData]:
+    options = Options()
+    options.add_argument("--headless")
 
-driver = webdriver.Chrome(options=options)
-# driver = webdriver.Firefox()
+    driver = webdriver.Chrome(options=options)
+    # driver = webdriver.Firefox()
+    url = f'https://google.com/search?q={team_name} {sport}'
 
-search = "Stade toulousain"
-url = f'https://google.com/search?q={search}'
+    driver.get(url)
 
-driver.get(url)
-# from selenium.webdriver import ActionChains
+    data = BeautifulSoup(driver.page_source, 'html.parser')
 
-# wait = WebDriverWait(driver, 10) # wait up to 4s
-# element = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "SwsxUd")))
-# action = ActionChains(driver)
-# action.move_to_element(element).click().perform()
-# # element.click()
-# # driver.execute_script("arguments[0].click();", element)
+    games = data.find_all('table', class_='KAIX8d')
+    print(len(games))
 
-data = BeautifulSoup(driver.page_source, 'html.parser')
+    extracted_games = []
+    for game_html in games:
+        extracted_games.append(extract_game_data_from_html(game_html))
 
-games = data.find_all('table', class_='KAIX8d')
-print(len(games))
+    driver.quit()
+    return extracted_games
 
-# Print the data objects
-for game_html in games:
-    print("------")
-    print(extract_game_data_from_html(game_html))
-
-
-driver.quit()
+if __name__ == '__main__':
+    games = get_next_games("stade toulousain")
+    print(games)

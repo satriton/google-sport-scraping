@@ -6,8 +6,8 @@ import logging
 from modele.GameData import GameData
 from modele.Team import Team
 
-TODAY = "Aujourd'hui" 
-TOMORROW = "Demain" 
+TODAY = "Aujourd'hui"
+TOMORROW = "Demain"
 DONE = "Terminé"
 
 def extract_game_data_from_html(entry_html: BeautifulSoup) -> GameData:
@@ -20,7 +20,7 @@ def extract_game_data_from_html(entry_html: BeautifulSoup) -> GameData:
     winner = extract_winner(teams, is_finished)
 
     replay_link = extract_replay_link(entry_html)
-    
+
     return GameData(
         teams,
         date,
@@ -83,10 +83,10 @@ def convert_to_date(date_to_parse: str, time: str) -> datetime:
             real_date = datetime(datetime.today().year, month, day)
         else:
             real_date = parse_date(date_to_parse)
-        
+
         return set_correct_time(real_date, time)
-    except Exception: 
-        logging.exception(f"Error occurred while parsing {date_to_parse}") 
+    except Exception:
+        logging.exception(f"Error occurred while parsing {date_to_parse}")
         return None
 
 
@@ -108,7 +108,7 @@ def set_correct_time(real_date: datetime, time: str) -> datetime:
         real_time = datetime.strptime(time, '%H:%M').time()
         real_date = real_date.replace(hour=real_time.hour, minute=real_time.minute)
     return real_date
-    
 
 
-    
+
+

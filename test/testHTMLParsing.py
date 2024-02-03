@@ -6,7 +6,7 @@ from parameterized import parameterized
 from bs4 import BeautifulSoup
 import sys
 
-sys.path.append( f'{os.getcwd()}/src' )
+sys.path.append( f'{os.getcwd()}/sport-scrapper' )
 
 import modele.GameData as GameData
 from modele.Team import Team
@@ -18,7 +18,7 @@ class TestHTMLParsing(unittest.TestCase):
         game: GameData = extract_game_data_from_html(BeautifulSoup(Fixture.past_game, 'html.parser'))
 
         self.assertEqual(
-            game.teams, 
+            game.teams,
             [Team(name="Bayonne", score=26, logo="data:image/png;base64,ljfUHUI"), Team(name="Toulouse", score=7, logo="data:image/png;base64,jdshkfjhskjocxvJNKJ")]
         )
 
@@ -26,7 +26,7 @@ class TestHTMLParsing(unittest.TestCase):
         game: GameData = extract_game_data_from_html(BeautifulSoup(Fixture.futur_game, 'html.parser'))
 
         self.assertEqual(
-            game.teams, 
+            game.teams,
             [Team(name="Oyonnax", score=None, logo="data:image/png;base64,iVBORw0=="), Team(name="Toulouse", score=None, logo="data:image/png;base64,iVBORw0")]
         )
 
@@ -34,11 +34,11 @@ class TestHTMLParsing(unittest.TestCase):
         game: GameData = extract_game_data_from_html(BeautifulSoup(Fixture.past_game, 'html.parser'))
 
         self.assertEqual(
-            game.date, 
+            game.date,
             date(2024, 8, 18)
         )
         self.assertEqual(
-            game.is_finished, 
+            game.is_finished,
             True
         )
 
@@ -46,11 +46,11 @@ class TestHTMLParsing(unittest.TestCase):
         game: GameData = extract_game_data_from_html(BeautifulSoup(Fixture.futur_game, 'html.parser'))
 
         self.assertEqual(
-            game.date, 
+            game.date,
             datetime(2024, 9, 2, 15, 0)
         )
         self.assertEqual(
-            game.is_finished, 
+            game.is_finished,
             False
         )
 
@@ -58,11 +58,11 @@ class TestHTMLParsing(unittest.TestCase):
         game: GameData = extract_game_data_from_html(BeautifulSoup(Fixture.past_game, 'html.parser'))
 
         self.assertEqual(
-            game.winner, 
+            game.winner,
             Team(name="Bayonne", score=26, logo="data:image/png;base64,ljfUHUI")
         )
         self.assertEqual(
-            game.replay_link, 
+            game.replay_link,
             "https://stories.canalplus.com/games/126001-20230818-Bayonne-vs-Stade-Toulousain.html"
         )
 
@@ -77,7 +77,7 @@ class TestHTMLParsing(unittest.TestCase):
         parsed_date = convert_to_date(date, "Terminé")
 
         self.assertEqual(
-            parsed_date, 
+            parsed_date,
             expected_date
         )
 

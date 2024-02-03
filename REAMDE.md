@@ -34,5 +34,15 @@ pip freeze > requirements.txt
 
 install following package to build it
 ```
-pip install wheel setuptools twine
+pip install wheel setuptools
+```
+
+build the library
+```
+python setup.py bdist_wheel
+```
+
+## Install it else where
+```
+pip install /path/to/wheelfile.whl
 ```

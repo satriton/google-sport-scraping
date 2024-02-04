@@ -1,6 +1,3 @@
-from bs4 import BeautifulSoup
-
-
 past_game = """
 <table class="KAIX8d">
     <tbody>

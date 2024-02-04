@@ -11,4 +11,3 @@ class GameData:
     is_finished: bool = False
     winner: Optional[Team] = None
     replay_link: Optional[str] = None
-

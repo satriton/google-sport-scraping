@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from typing import List
 from bs4 import BeautifulSoup
 import logging
@@ -108,7 +108,3 @@ def set_correct_time(real_date: datetime, time: str) -> datetime:
         real_time = datetime.strptime(time, '%H:%M').time()
         real_date = real_date.replace(hour=real_time.hour, minute=real_time.minute)
     return real_date
-
-
-
-

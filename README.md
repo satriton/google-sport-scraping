@@ -25,6 +25,7 @@ Scrapt data to get result of rugby game
 
 - Add .env file at root (ask for the file at someone who have it)
 
+- Change language depending on your browser language in sport-scapper/extractData
 
 ## Build the library
 regenerate requirements.txt if you added package
